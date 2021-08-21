@@ -30,11 +30,12 @@ func checkerr(err error) {
 }
 
 type Payload struct {
-	OrderID     string
-	OrderDate   string
-	Freight     float32
-	ShipCity    string
-	ShipCountry string
+	TransactionHash string
+	BlockID         string
+	Age             float32
+	FromAddress     string
+	ToAddress       string
+	KeyValue        string
 }
 
 type Index struct {
@@ -47,82 +48,83 @@ func index(w http.ResponseWriter, r *http.Request) {
 	//log.Printf("Func: index(). ")
 
 	if r.Method == "GET" {
-		addr := r.URL.Query().Get("addr")
+		//addr := r.URL.Query().Get("addr")
 
 		if r.URL.Path == "/GetTransactions" {
 			w.Header().Set("Content-Type", "application/json")
 
 			var p = []Payload{
 				Payload{
-					OrderID:     "0009",
-					OrderDate:   "01/03/1979",
-					Freight:     11.34,
-					ShipCity:    "TEST CITY",
-					ShipCountry: "Test Country",
+					TransactionHash: "0009",
+					BlockID:         "01/03/1979",
+					Age:             11.34,
+					FromAddress:     "TEST CITY",
+					ToAddress:       "Test Country",
+					KeyValue:        "Rawr",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 				Payload{
-					OrderID:     "00010",
-					OrderDate:   "05/12/1983",
-					Freight:     23.98,
-					ShipCity:    "TEST CITY 2",
-					ShipCountry: "Test Country 2",
+					TransactionHash: "00010",
+					BlockID:         "05/12/1983",
+					Age:             23.98,
+					FromAddress:     "TEST CITY 2",
+					ToAddress:       "Test Country 2",
 				},
 			}
 
