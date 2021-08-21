@@ -42,7 +42,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		addr := r.URL.Query().Get("addr")
 
-		if r.URL.Path == "/GetTransactions" {
+		if r.URL.Path == "/api/GetTransactions" {
 			w.Header().Set("Content-Type", "application/json")
 
 			// connect to server
@@ -61,8 +61,39 @@ func index(w http.ResponseWriter, r *http.Request) {
 				fmt.Printf("Error connecting to blockchain RPC socket: %s", err)
 				fmt.Fprintf(w, "[{'error': 'Error connecting to blockchain RPC socket'}]")
 			}
+		} else if r.URL.Path == "/api/GetBlocks" {
+			w.Header().Set("Content-Type", "application/json")
 
-			//json.NewEncoder(w).Encode(p)
+			// connect to server
+			conn, err := net.Dial("tcp", "127.0.0.1:8000")
+
+			if err == nil {
+				// Send request to blockchain RPC service.
+				fmt.Fprintf(conn, "GetBlocks:"+addr+"\n")
+
+				// Wait for reply from service.
+				message, _ := bufio.NewReader(conn).ReadString('\n')
+				fmt.Print("Message from server: " + message)
+
+				fmt.Fprintf(w, message)
+			} else {
+				fmt.Printf("Error connecting to blockchain RPC socket: %s", err)
+				fmt.Fprintf(w, "[{'error': 'Error connecting to blockchain RPC socket'}]")
+			}
+		} else if r.URL.Path == "/blocks" {
+			t, err := template.ParseFiles("web/blocks.html")
+			if err != nil {
+				log.Printf("ERROR:%s", err)
+			} else {
+				t.Execute(w, indexIn)
+			}
+		} else if r.URL.Path == "/transactions" {
+			t, err := template.ParseFiles("web/indexStart.html")
+			if err != nil {
+				log.Printf("ERROR:%s", err)
+			} else {
+				t.Execute(w, indexIn)
+			}
 		} else {
 
 			// Opening html tags

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Atomic Prototype - View Transactions</title>
+    <title>Atomic Prototype - View Blocks</title>
 
     <link href="web/styles/kendo.common.min.css" rel="stylesheet" />
     <link href="web/styles/kendo.default.min.css" rel="stylesheet" />
@@ -19,8 +19,8 @@
             <li>
                 Blockchain
                 <ul>
-                    <li><a href="./blocks">Blocks</a></li>
-                    <li><a href="./transactions">Transactions</a></li>
+                  <li><a href="./blocks">Blocks</a></li>
+                  <li><a href="./transactions">Transactions</a></li>
                 </ul>
             </li>
             <li>
@@ -83,17 +83,20 @@
         });
 
         var gridDataSource = new kendo.data.DataSource({
+          //data: orderData,
           transport: {
             read: function(options) {
+
                 $.ajax({
-                    url: "http://localhost:8090/api/GetTransactions?addr=" + $("#txtSearchByAddress").val(),
+                    url: "http://localhost:8090/api/GetBlocks?addr=" + $("#txtSearchByAddress").val(),
                     dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
                     success: function(result) {
-                        options.success(result);
+
+                    options.success(result);
                     },
                     error: function(result) {
-                        // notify the data source that the request failed
-                        options.error(result);
+                    // notify the data source that the request failed
+                    options.error(result);
                     }
                 });
             }
@@ -101,12 +104,10 @@
           schema: {
               model: {
                   fields: {
-                    TransactionHash: { type: "number" },
-                    BlockID: { type: "string" },
+                    Block: { type: "number" },
                     Age: { type: "number" },
-                    FromAddress: { type: "string" },
-                    ToAddress: { type: "string" },
-                    KeyValue: {type: "number"}
+                    Txn: { type: "string" },
+                    Validator: { type: "string" }
                   }
               }
           },
@@ -125,20 +126,17 @@
           sortable: true,
           filterable: true,
           columns: [{
-            field:"TransactionHash",
-            title: "Transaction Hash",
+            field:"Block",
+            title: "Block",
           }, {
             field: "Age",
             template: "<span style='color:#= getAgeColor(Age) #'>#= Age #</span>"
           }, {
-            field: "BlockID",
-            title: "Block ID",
+            field: "Txn",
+            title: "Txn",
           }, {
-            field: "FromAddress",
-            title: "From Address"
-          }, {
-            field: "ToAddress",
-            title: "To Address"
+            field: "Validator",
+            title: "Validator"
           }]
         });
 
