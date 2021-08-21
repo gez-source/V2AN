@@ -106,7 +106,8 @@
                     Age: { type: "number" },
                     FromAddress: { type: "string" },
                     ToAddress: { type: "string" },
-                    KeyValue: {type: "number"}
+                    Key: {type: "string"},
+                    Value: {type: "string"}
                   }
               }
           },
@@ -127,18 +128,26 @@
           columns: [{
             field:"TransactionHash",
             title: "Transaction Hash",
+            template: "<span><a href='./?txid=#= TransactionHash #'>#= TransactionHash #</a></span>"
           }, {
             field: "Age",
             template: "<span style='color:#= getAgeColor(Age) #'>#= Age #</span>"
           }, {
             field: "BlockID",
             title: "Block ID",
+            template: "<span><a href='./blocks?bid=#= BlockID #'>#= BlockID #</a></span>"
           }, {
             field: "FromAddress",
             title: "From Address"
           }, {
             field: "ToAddress",
             title: "To Address"
+          }, {
+            field: "Key",
+            title: "Key"
+          }, {
+            field: "Value",
+            title: "Value"
           }]
         });
 

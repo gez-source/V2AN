@@ -84,7 +84,7 @@ func main() {
 			var p = []Transaction{
 				Transaction{
 					TransactionHash: "0009",
-					BlockID:         "01/03/1979",
+					BlockID:         "5120034",
 					Age:             11.34,
 					FromAddress:     "TEST CITY",
 					ToAddress:       "Test Country",
@@ -93,7 +93,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -102,7 +102,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -111,7 +111,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -121,7 +121,7 @@ func main() {
 
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -130,7 +130,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -139,7 +139,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -148,7 +148,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -157,7 +157,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
@@ -166,7 +166,7 @@ func main() {
 				},
 				Transaction{
 					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
+					BlockID:         "5120021",
 					Age:             23.98,
 					FromAddress:     "TEST CITY 2",
 					ToAddress:       "Test Country 2",
