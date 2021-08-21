@@ -1,10 +1,11 @@
 package main
 
 import (
-	"encoding/json"
+	"bufio"
 	"fmt"
 	"html/template"
 	"log"
+	"net"
 	"net/http"
 )
 
@@ -29,15 +30,6 @@ func checkerr(err error) {
 
 }
 
-type Payload struct {
-	TransactionHash string
-	BlockID         string
-	Age             float32
-	FromAddress     string
-	ToAddress       string
-	KeyValue        string
-}
-
 type Index struct {
 }
 
@@ -48,87 +40,29 @@ func index(w http.ResponseWriter, r *http.Request) {
 	//log.Printf("Func: index(). ")
 
 	if r.Method == "GET" {
-		//addr := r.URL.Query().Get("addr")
+		addr := r.URL.Query().Get("addr")
 
 		if r.URL.Path == "/GetTransactions" {
 			w.Header().Set("Content-Type", "application/json")
 
-			var p = []Payload{
-				Payload{
-					TransactionHash: "0009",
-					BlockID:         "01/03/1979",
-					Age:             11.34,
-					FromAddress:     "TEST CITY",
-					ToAddress:       "Test Country",
-					KeyValue:        "Rawr",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
+			// connect to server
+			conn, err := net.Dial("tcp", "127.0.0.1:8000")
 
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
-				Payload{
-					TransactionHash: "00010",
-					BlockID:         "05/12/1983",
-					Age:             23.98,
-					FromAddress:     "TEST CITY 2",
-					ToAddress:       "Test Country 2",
-				},
+			if err == nil {
+				// Send request to blockchain RPC service.
+				fmt.Fprintf(conn, "GetTransactions:"+addr+"\n")
+
+				// Wait for reply from service.
+				message, _ := bufio.NewReader(conn).ReadString('\n')
+				fmt.Print("Message from server: " + message)
+
+				fmt.Fprintf(w, message)
+			} else {
+				fmt.Printf("Error connecting to blockchain RPC socket: %s", err)
+				fmt.Fprintf(w, "[{'error': 'Error connecting to blockchain RPC socket'}]")
 			}
 
-			json.NewEncoder(w).Encode(p)
+			//json.NewEncoder(w).Encode(p)
 		} else {
 
 			// Opening html tags
