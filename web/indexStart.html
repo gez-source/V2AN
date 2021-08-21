@@ -15,10 +15,8 @@
       This is version <strong id="kendoVersion"></strong>.</p>
     <div id="textBox">
         <div class="inputPanel">
-            <form action="fpath/makethingshappen.php">
-            <input type="text" placeholder="Search..">
-            <input type="submit">
-            </form>
+            <input type="text" placeholder="Search.." id="txtSearchByAddress">
+            <button id="btnSearch">Search</button>
         </div>
     </div>
 
@@ -34,6 +32,10 @@
       $(function() {
 
         $("#kendoVersion").text(kendo.version);
+
+        $("#btnSearch").click(function(){
+            $("#ordersGrid").data("kendoGrid").dataSource.read();
+        });
 
         var orderData = [
           { OrderID: 1, OrderDate: "2017-11-06T12:00:00", Freight: 12.34, ShipCity: "Antwerp", ShipCountry: "Belgium" },
@@ -61,12 +63,23 @@
           { OrderID: 23, OrderDate: "2019-08-18T12:00:00", Freight: 24.13, ShipCity: "Singapore", ShipCountry: "Singapore" }
         ];
 
-        var gridDataSource = new kendo.data.DataSource({
+        gridDataSource = new kendo.data.DataSource({
           //data: orderData,
           transport: {
-            read: {
-              url: "http://localhost:8090/GetTransactions",
-              dataType: "json"
+            read: function(options) {
+                // make JSONP request to https://demos.telerik.com/kendo-ui/service/products
+                $.ajax({
+                    url: "http://localhost:8090/GetTransactions?addr=" + $("#txtSearchByAddress").val(),
+                    dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
+                    success: function(result) {
+                    // notify the data source that the request succeeded
+                    options.success(result);
+                    },
+                    error: function(result) {
+                    // notify the data source that the request failed
+                    options.error(result);
+                    }
+                });
             }
           },
           schema: {

@@ -43,11 +43,13 @@ type Index struct {
 var indexIn = Index{}
 
 func index(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Func: index(). Method:%s IP:%s r.RequestURI:%s", r.Method, r.RemoteAddr, r.RequestURI)
+	log.Printf("Func: index(). Method:%s IP:%s r.URL.Path:%s", r.Method, r.RemoteAddr, r.URL.Path)
 	//log.Printf("Func: index(). ")
 
 	if r.Method == "GET" {
-		if r.RequestURI == "/GetTransactions" {
+		addr := r.URL.Query().Get("addr")
+
+		if r.URL.Path == "/GetTransactions" {
 			w.Header().Set("Content-Type", "application/json")
 
 			var p = []Payload{
