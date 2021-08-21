@@ -55,18 +55,35 @@
             </li>
         </ul>
     </div>
+    <div id="blockView">
+      <div id="textBox">
+          <div class="inputPanel">
+              <h1>ATOMIC</h1>
+              <h2>Blockchain Explorer</h2>
+              <input type="text" placeholder="Search by Profile Address / Txn Hash / Block" id="txtSearchByAddress">
+              <button class="k-button" id="btnSearch">Search</button>
+          </div>
+      </div>
 
-    <div id="textBox">
-        <div class="inputPanel">
-            <h1>ATOMIC</h1>
-            <h2>Blockchain Explorer</h2>
-            <input type="text" placeholder="Search by Profile Address / Txn Hash / Block" id="txtSearchByAddress">
-            <button class="k-button" id="btnSearch">Search</button>
+      <div id="blockGrid" data-bind="visible: blocksVisible"></div>
+
+      <div class="demo-section k-content wide" data-bind="visible: selectedBlockVisible">
+        <div>
+            <h3>Block Details</h3>
+            <form>
+                <ul id="fieldlist">
+                    <li><label for="fname">Block:</label> <input id="fname" data-bind="value: selectedBlock.Block" class="k-textbox" /></li>
+                    <li><label for="fname">Age:</label> <input id="fname" data-bind="value: selectedBlock.Age" class="k-textbox" /></li>
+                    <li><label for="fname">Txn:</label> <input id="fname" data-bind="value: selectedBlock.Txn" class="k-textbox" /></li>
+                    <li><label for="fname">Validator:</label> <input id="fname" data-bind="value: selectedBlock.Validator" class="k-textbox" /></li>
+                </ul>
+            </form>
         </div>
     </div>
+</div>
 
-    <div id="transactionGrid"></div>
-
+<div id="dialog">
+</div>
     <style>
         .inputPanel {padding: 50px; margin: 0 auto; text-align: center;}
         #txtSearchByAddress {width: 20%}
@@ -79,7 +96,7 @@
         $("#menu").kendoMenu();
 
         $("#btnSearch").click(function(){
-            $("#transactionGrid").data("kendoGrid").dataSource.read();
+            $("#blockGrid").data("kendoGrid").dataSource.read();
         });
 
         var gridDataSource = new kendo.data.DataSource({
@@ -88,15 +105,15 @@
             read: function(options) {
 
                 $.ajax({
-                    url: "http://localhost:8090/api/GetBlocks?addr=" + $("#txtSearchByAddress").val(),
+                    url: "api/GetBlocks?addr=" + $("#txtSearchByAddress").val(),
                     dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
                     success: function(result) {
-
-                    options.success(result);
+                        options.success(result);
                     },
                     error: function(result) {
-                    // notify the data source that the request failed
-                    options.error(result);
+                        // notify the data source that the request failed
+                        options.error(result);
+                        $('#dialog').data("kendoDialog").open();
                     }
                 });
             }
@@ -118,7 +135,7 @@
           }
         });
 
-        $("#transactionGrid").kendoGrid({
+        $("#blockGrid").kendoGrid({
           dataSource: gridDataSource,
           theme: ["[Silver]"],
           pageable: true,
@@ -143,6 +160,22 @@
 
       });
 
+      $('#dialog').kendoDialog({
+            width: "450px",
+            title: "Error",
+            closable: false,
+            modal: false,
+            visible: false,
+            content: "<p>An error occured contacting the server.<p>",
+            actions: [
+                { text: 'Ok', primary: true }
+            ],
+            close: function(e)
+            {
+
+            }
+        });
+
       function getAgeColor(Age) {
         if (Age > 60) {
           return "#090";
@@ -153,6 +186,47 @@
         }
 
       }
+
+      viewModel = kendo.observable({
+            blocksVisible: true,
+            selectedBlockVisible: false,
+            selectedBlock: null,
+            showBlocks: function(e) {
+                this.set("blocksVisible", true);
+                this.set("selectedBlockVisible", false);
+            },
+            hideBlocks: function(e) {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+
+                $.ajax({
+                    url: "api/GetBlock?addr=" + params.bid,
+                    dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
+                    success: function(result) {
+                        viewModel.set("blocksVisible", false);
+                        viewModel.set("selectedBlockVisible", true);
+                        viewModel.set("selectedBlock", result);
+                    },
+                    error: function(result) {
+                        $('#dialog').data("kendoDialog").open();
+                    }
+                });
+            },
+            init: function()
+            {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+
+                if(params.bid)
+                {
+                    viewModel.hideBlocks();
+                }
+            }
+        });
+
+        kendo.bind($("#blockView"), viewModel);
+
+        viewModel.init();
 
     </script>
 

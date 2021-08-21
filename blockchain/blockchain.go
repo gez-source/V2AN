@@ -80,6 +80,37 @@ func main() {
 			} else {
 				fmt.Fprintf(conn, string(json_msg)+"\n")
 			}
+		} else if command == "GetTransaction" {
+			var b = Transaction{
+				TransactionHash: "0009",
+				BlockID:         "5120034",
+				Age:             11.34,
+				FromAddress:     "TEST CITY",
+				ToAddress:       "Test Country",
+				Key:             "Rawr",
+				Value:           "Rawr value",
+			}
+			json_msg, err := json.Marshal(b)
+			if err != nil {
+				fmt.Printf("Error: %s", err)
+				fmt.Fprintf(conn, "{error: 'Error: converting to json'}"+"\n")
+			} else {
+				fmt.Fprintf(conn, string(json_msg)+"\n")
+			}
+		} else if command == "GetBlock" {
+			var b = Block{
+				Block:     5120034,
+				Age:       4.0,
+				Txn:       "sjdsdjasjkdjskjdkksjk",
+				Validator: "validator-Z89293432838218382393A",
+			}
+			json_msg, err := json.Marshal(b)
+			if err != nil {
+				fmt.Printf("Error: %s", err)
+				fmt.Fprintf(conn, "{error: 'Error: converting to json'}"+"\n")
+			} else {
+				fmt.Fprintf(conn, string(json_msg)+"\n")
+			}
 		} else if command == "GetTransactions" {
 			var p = []Transaction{
 				Transaction{

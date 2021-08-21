@@ -56,16 +56,39 @@
         </ul>
     </div>
 
-    <div id="textBox">
-        <div class="inputPanel">
-            <h1>ATOMIC</h1>
-            <h2>Blockchain Explorer</h2>
-            <input type="text" placeholder="Search by Profile Address / Txn Hash / Block" id="txtSearchByAddress">
-            <button class="k-button" id="btnSearch">Search</button>
+    <div id="transactionView">
+
+        <div id="textBox">
+            <div class="inputPanel">
+                <h1>ATOMIC</h1>
+                <h2>Blockchain Explorer</h2>
+                <input type="text" placeholder="Search by Profile Address / Txn Hash / Block" id="txtSearchByAddress">
+                <button class="k-button" id="btnSearch">Search</button>
+            </div>
+        </div>
+    
+        <div id="transactionGrid" data-bind="visible: transactionsVisible"></div>
+
+        <div class="demo-section k-content wide" data-bind="visible: selectedTransactionVisible">
+            <div>
+                <h3>Transaction Details</h3>
+                <form>
+                    <ul id="fieldlist">
+                        <li><label for="fname">Transaction Hash:</label> <input id="fname" data-bind="value: selectedTransaction.TransactionHash" class="k-textbox" /></li>
+                        <li><label for="fname">Block ID:</label> <input id="fname" data-bind="value: selectedTransaction.BlockID" class="k-textbox" /></li>
+                        <li><label for="fname">Age:</label> <input id="fname" data-bind="value: selectedTransaction.Age" class="k-textbox" /></li>
+                        <li><label for="fname">From Address:</label> <input id="fname" data-bind="value: selectedTransaction.FromAddress" class="k-textbox" /></li>
+                        <li><label for="fname">To Address:</label> <input id="fname" data-bind="value: selectedTransaction.ToAddress" class="k-textbox" /></li>
+                        <li><label for="fname">Key:</label> <input id="fname" data-bind="value: selectedTransaction.Key" class="k-textbox" /></li>
+                        <li><label for="fname">Value:</label> <input id="fname" data-bind="value: selectedTransaction.Value" class="k-textbox" /></li>
+                    </ul>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div id="transactionGrid"></div>
+    <div id="dialog">
+    </div>
 
     <style>
         .inputPanel {padding: 50px; margin: 0 auto; text-align: center;}
@@ -86,7 +109,7 @@
           transport: {
             read: function(options) {
                 $.ajax({
-                    url: "http://localhost:8090/api/GetTransactions?addr=" + $("#txtSearchByAddress").val(),
+                    url: "api/GetTransactions?addr=" + $("#txtSearchByAddress").val(),
                     dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
                     success: function(result) {
                         options.success(result);
@@ -94,6 +117,8 @@
                     error: function(result) {
                         // notify the data source that the request failed
                         options.error(result);
+
+                        $('#dialog').data("kendoDialog").open();
                     }
                 });
             }
@@ -150,6 +175,63 @@
             title: "Value"
           }]
         });
+
+        $('#dialog').kendoDialog({
+            width: "450px",
+            title: "Error",
+            closable: false,
+            modal: false,
+            visible: false,
+            content: "<p>An error occured contacting the server.<p>",
+            actions: [
+                { text: 'Ok', primary: true }
+            ],
+            close: function(e)
+            {
+
+            }
+        });
+
+        viewModel = kendo.observable({
+            transactionsVisible: true,
+            selectedTransactionVisible: false,
+            selectedTransaction: null,
+            showTransactions: function(e) {
+                this.set("transactionsVisible", true);
+                this.set("selectedTransactionVisible", false);
+            },
+            hideTransactions: function(e) {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+
+                $.ajax({
+                    url: "api/GetTransaction?addr=" + params.txid,
+                    dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
+                    success: function(result) {
+                        viewModel.set("transactionsVisible", false);
+                        viewModel.set("selectedTransactionVisible", true);
+                        viewModel.set("selectedTransaction", result);
+                    },
+                    error: function(result) {
+                        $('#dialog').data("kendoDialog").open();
+                    }
+                });
+            },
+            init: function()
+            {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+
+                if(params.txid)
+                {
+                    viewModel.hideTransactions();
+                }
+            }
+        });
+
+        kendo.bind($("#transactionView"), viewModel);
+
+        viewModel.init();
 
       });
 
