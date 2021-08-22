@@ -29,3 +29,6 @@ To start the blockchain:
 $ cd blockchain
 
 $ go run blockchain.go
+
+
+In your browser navigate to http://localhost:8090
