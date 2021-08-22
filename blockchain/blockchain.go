@@ -2,9 +2,12 @@ package main
 
 import (
 	"bufio"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
+	"os"
 	"strings"
 )
 
@@ -25,8 +28,31 @@ type Transaction struct {
 	Value           string
 }
 
+func populate(filepath string) [][]string {
+	csvfile, err := os.Open(filepath)
+	if err != nil {
+		log.Printf("ERROR: failed to read .csv file. %s", err)
+	}
+
+	csvreader := csv.NewReader(csvfile)
+	records, err := csvreader.ReadAll()
+	if err != nil {
+		log.Printf("ERROR: failed to read whole csv records. %s", err)
+	}
+
+	csvfile.Close()
+	return records
+
+}
+
 func main() {
 	fmt.Println("Start server...")
+
+	myrecords := populate("dataset.csv")
+
+	// example
+	fmt.Printf("%s\n\n", myrecords)
+	fmt.Printf("%s\n", myrecords[1][0:7])
 
 	// listen on port 8000
 	ln, _ := net.Listen("tcp", ":8000")
@@ -43,7 +69,7 @@ func main() {
 
 		s := strings.Split(message, ":")
 		var command = s[0]
-		//addr = s[1]
+		//addr = s[1] // Get the address parameter.
 
 		if command == "GetBlocks" {
 			var b = []Block{
