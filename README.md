@@ -52,3 +52,11 @@ In your browser navigate to http://localhost:8090
 # Prototyping
 
 ![alt text](infographic.png "Prototype Flowchart")
+
+
+![alt text](prototyping/mobile0.png "Prototype 0")
+
+![alt text](prototyping/mobile1.png "Prototype 1")
+
+![alt text](prototyping/mobile2.png "Prototype 2")
+
