@@ -3,6 +3,21 @@ Prototype for GovHack 2021, Australia
 
 ![alt text](screenhot-explorer.png "Screenshot of blockchain explorer")
 
+This project will try and build Citizen’s Trust in this Digital World 
+using a blockchain approach to store key-value items with access control
+to show who is allowed access to what type of granular data.
+
+This project in it's proof-of-concept stage and utilises Tasmanian Heritage data by collecting it and storing it 
+using a blockchain technology. 
+The data provides a list of the permanent and provisional entries on the Tasmanian Heritage Register by name and address.
+
+The prototype includes a blockchain explorer website that show blocks and transactions and shows key-value pairs 
+stored by authoritive data verifiers.
+
+The blockchain explorer website communicates with an underlying blockchain program written in Go.
+
+
+
 We extracted data from the heritage register entries dataset and cleaned it up to use it 
 as a test case for our blockchain to see if it was possible to digitise this type of data on the blockchain.
 Here is the dataset we used: 
