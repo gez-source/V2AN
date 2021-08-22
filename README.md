@@ -47,3 +47,8 @@ $ go run blockchain.go
 
 
 In your browser navigate to http://localhost:8090
+
+
+# Prototyping
+
+![alt text](infographic.png "Prototype Flowchart")
