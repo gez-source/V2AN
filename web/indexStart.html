@@ -128,7 +128,7 @@
                   fields: {
                     TransactionHash: { type: "string" },
                     BlockID: { type: "string" },
-                    Age: { type: "number" },
+                    Age: { type: "string" },
                     FromAddress: { type: "string" },
                     ToAddress: { type: "string" },
                     Key: {type: "string"},
@@ -136,7 +136,7 @@
                   }
               }
           },
-          pageSize: 20,
+          pageSize: 5,
           sort: {
             field: "Age",
             dir: "desc"
@@ -146,7 +146,10 @@
         $("#transactionGrid").kendoGrid({
           dataSource: gridDataSource,
           theme: ["[Silver]"],
-          pageable: true,
+          pageable: {
+			pageSize: 5,
+			refresh: true
+		  },
           refresh: true,
           sortable: true,
           filterable: true,

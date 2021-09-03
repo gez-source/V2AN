@@ -122,15 +122,15 @@
               model: {
                   fields: {
                     Block: { type: "number" },
-                    Age: { type: "number" },
+                    Age: { type: "string" },
                     Txn: { type: "string" },
                     Validator: { type: "string" }
                   }
               }
           },
-          pageSize: 20,
+          pageSize: 5,
           sort: {
-            field: "Age",
+            field: "Block",
             dir: "desc"
           }
         });
@@ -138,7 +138,10 @@
         $("#blockGrid").kendoGrid({
           dataSource: gridDataSource,
           theme: ["[Silver]"],
-          pageable: true,
+          pageable: {
+			pageSize: 5,
+			refresh: true
+		  },
           refresh: true,
           sortable: true,
           filterable: true,

@@ -235,8 +235,8 @@ func main() {
 
 			_ = p
 
-			k := []Transaction{}
-			for i := 0; i < len(myrecords); i++ {
+/* 			k := []Transaction{}
+			for i := 1; i < len(myrecords); i++ {
 				postCode := myrecords[i][4]
 				begin := myrecords[i][0:7]
 
@@ -251,9 +251,9 @@ func main() {
 				}
 
 				k = append(k, txn)
-			}
+			} */
 
-			json_msg, err := json.Marshal(k)
+			json_msg, err := json.Marshal(p)
 			if err != nil {
 				fmt.Printf("Error: %s", err)
 				fmt.Fprintf(conn, "{error: 'Error: converting to json'}"+"\n")
