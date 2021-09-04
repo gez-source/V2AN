@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +23,19 @@ namespace BlockchainCS
         public List<Block> chain = new List<Block>();
         private Queue<Transaction> PendingTransactions = new Queue<Transaction>();
 
+        public static long TimeStarted = GetTimestamp();
+
+
+        public static long GetTimestamp()
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            return now.ToUnixTimeMilliseconds();
+        }
+
         public static Block CreateHeadBlock()
         {
             Block block = new Block();
+            block.block = 0;
             block.Timestamp = Block.GetTimestamp(DateTime.Parse("24/08/2021"));
             block.PreviousHash = string.Empty;
             block.Validator = "ATOMIC-chain-head";
@@ -43,8 +54,18 @@ namespace BlockchainCS
         {
             Block block = new Block();
             block.block = ++BlockHeight;
-            block.Timestamp = Block.GetTimestamp();
+
             block.PreviousHash = this.GetLatestBlock().Hash;
+
+            if (block.block > 0)
+            {
+                block.Timestamp = Block.GetTimestamp();
+            }
+            else
+            {
+                block.Timestamp = this.GetLatestBlock().Timestamp;
+            }
+
             block.Transactions = new List<Transaction>(this.PendingTransactions);
             block.Validator = validatorAddress;
 
@@ -68,6 +89,9 @@ namespace BlockchainCS
 
                 // Add to the blockchain:
                 this.chain.Add(block);
+
+                // Save block to file system.
+                block.SaveToFilesystem();
 
                 // TODO: Notify or broadcast new block to other connected clients
             }
@@ -231,8 +255,9 @@ namespace BlockchainCS
         {
             // TODO: Optimise by replacing with hash code comparision
             string realGenesis = CreateHeadBlock().ToHashableString();
+            string chainGenesis = this.chain.First().ToHashableString();
 
-            if (realGenesis != this.chain.First().ToHashableString())
+            if (realGenesis != chainGenesis)
             {
                 Console.WriteLine("Chain head does not match local head");
                 return false;
@@ -260,6 +285,31 @@ namespace BlockchainCS
             }
 
             return true;
+        }
+
+        public void LoadFromFilesystem()
+        {
+            string chainDir = "chain";
+
+            BlockchainInfo info = BlockchainInfo.GetInfo();
+
+            for(int blockId=0; blockId <= info.BlockHeight; blockId++)
+            {
+                string fileName = chainDir + "\\block_" + blockId.ToString() + ".dat";
+
+                if(File.Exists(fileName))
+                {
+                    string blockJSON = File.ReadAllText(fileName);
+
+                    Block block = JSON.FromJSON<Block>(blockJSON);
+
+                    this.chain.Add(block);
+                }
+                else
+                {
+                    // TODO: Sync block from p2p nodes
+                }
+            }
         }
     }
 }

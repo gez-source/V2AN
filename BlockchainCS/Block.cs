@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace BlockchainCS
 {
@@ -102,11 +103,19 @@ namespace BlockchainCS
         [JsonProperty("Validator")]
         public string Validator;
 
-
+        [JsonProperty("Transactions")]
         public List<Transaction> Transactions = new List<Transaction>();
+
+        [JsonProperty("Timestamp")]
         public long Timestamp;
+
+        [JsonProperty("Nonce")]
         public long Nonce = 0;
+
+        [JsonProperty("Hash")]
         public string Hash;
+
+        [JsonProperty("PreviousHash")]
         public string PreviousHash;
 
         public string ToHashableString()
@@ -119,7 +128,7 @@ namespace BlockchainCS
                 txData += tx.ToHashableString();
             }
 
-            return txData + PreviousHash + Timestamp + Nonce.ToString() + mode.ToString();
+            return "tx: " + txData + "prev: " + PreviousHash + " time: " + Timestamp.ToString() + " nonce: " + Nonce.ToString() + " mode: " + mode.ToString();
         }
 
         public string ComputeHash()
@@ -158,6 +167,13 @@ namespace BlockchainCS
 
         public string GenerateChallenge(int difficulty, string problem)
         {
+            // TODO: Generate a challenge based on a TOTP.
+            //long otp = (GetTimestamp() - Blockchain.TimeStarted) / 30000;
+            //long otp = GetTimestamp() / 30000;
+            //string hashOTP = Crypto.Hash.ComputeHash(otp.ToString());
+
+            // T = (Current Unix time -T0) / X
+
             string solution = string.Empty; // Solution to problem.
             for(int d= 0; d < difficulty; d++)
             {
@@ -191,6 +207,36 @@ namespace BlockchainCS
             string sample = this.Hash.Substring(0, problem.Length * difficulty);
 
             return (sample == solution);
+        }
+
+        public void SaveToFilesystem()
+        {
+            string chainDir = "chain";
+            string fileName = chainDir + "\\block_" + block.ToString() + ".dat";
+            
+
+            if (!Directory.Exists(chainDir))
+            {
+                Directory.CreateDirectory(chainDir);
+            }
+
+            if (File.Exists(fileName))
+            {
+                throw new Exception("Block already exists in chain. Can not overwrite it.");
+            }
+
+            string json = JSON.ToJSON(this);
+
+            // Save block to file.
+            File.WriteAllText(fileName, json);
+
+            // Update BlockchainInfo to new block height.
+            BlockchainInfo info = BlockchainInfo.GetInfo();
+            if(info.BlockHeight < this.block)
+            {
+                info.BlockHeight = this.block;
+            }
+            BlockchainInfo.SaveInfo(info);
         }
     }
 }

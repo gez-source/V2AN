@@ -51,6 +51,7 @@
     <Compile Include="Block.cs" />
     <Compile Include="Blockchain.cs" />
     <Compile Include="BlockchainDB.cs" />
+    <Compile Include="BlockchainInfo.cs" />
     <Compile Include="Crypto.cs" />
     <Compile Include="JSON.cs" />
     <Compile Include="KeyGenerator.cs" />

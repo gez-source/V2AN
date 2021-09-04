@@ -5,22 +5,13 @@ namespace BlockchainCS
 {
     public class Program
     {
-        public static int Main(String[] args)
+        public static void Create(Blockchain atomic, string myProfileAddress, PrivateKey privateKey)
         {
-            //KeyGenerator.GenerateKeys();
             const string ORIGIN_ADDRESS = "ORIGIN";
 
-            PrivateKey privateKey = Crypto.EllipticCurve.Converters.Base62ToPrivateKey("C7820G4482BycKjC59QKOCsU7kqzpYRzIYKGdAP7THIa5zFSiLCjAW1mO5Au4400gXGW04vxzxMrNTdwjQlhWybXXgSAscrBGIwHwOKyDzQaLkP8GoOPYr1Ma3wc585OAfBblgCWzafmrjJzeNb1BSi5oJOZ3");
-            PublicKey publicKey = privateKey.publicKey();
-
-            string myProfileAddress = Crypto.EllipticCurve.Converters.KeyToBase62(publicKey);
-
-            Blockchain.Difficulty = 1;
-            Blockchain.Problem = "effa";
-            Blockchain.BlockchainMode = BlockchainMode.TestNet;
-            Blockchain atomic = new Blockchain();
-            BlockchainDB.Atomic = atomic;
-            atomic.chain.Add(Blockchain.CreateHeadBlock());
+            Block head = Blockchain.CreateHeadBlock();
+            head.SaveToFilesystem();
+            atomic.chain.Add(head);
             atomic.VerifyPendingTransactions(ORIGIN_ADDRESS);
 
             Transaction tx0 = new Transaction();
@@ -63,7 +54,7 @@ namespace BlockchainCS
             atomic.VerifyPendingTransactions(myProfileAddress);
 
             Console.WriteLine("");
-            Console.WriteLine("Current value of key: Name is: "+ atomic.GetValue(myProfileAddress, "Name"));
+            Console.WriteLine("Current value of key: Name is: " + atomic.GetValue(myProfileAddress, "Name"));
 
             // Check if chain is valid.
             Console.WriteLine("Blockchain valid? " + (atomic.IsChainValid() ? "Yes" : "No"));
@@ -94,6 +85,27 @@ namespace BlockchainCS
             Console.WriteLine("Blockchain valid? " + (atomic.IsChainValid() ? "Yes" : "No"));
 
             //atomic.chain[4].Transactions[0].ToAddress = "HACK!";
+        }
+
+        public static int Main(String[] args)
+        {
+            //KeyGenerator.GenerateKeys();
+
+
+            PrivateKey privateKey = Crypto.EllipticCurve.Converters.Base62ToPrivateKey("C7820G4482BycKjC59QKOCsU7kqzpYRzIYKGdAP7THIa5zFSiLCjAW1mO5Au4400gXGW04vxzxMrNTdwjQlhWybXXgSAscrBGIwHwOKyDzQaLkP8GoOPYr1Ma3wc585OAfBblgCWzafmrjJzeNb1BSi5oJOZ3");
+            PublicKey publicKey = privateKey.publicKey();
+
+            string myProfileAddress = Crypto.EllipticCurve.Converters.KeyToBase62(publicKey);
+
+            Blockchain.Difficulty = 1;
+            Blockchain.Problem = "effa";
+            Blockchain.BlockchainMode = BlockchainMode.TestNet;
+            Blockchain atomic = new Blockchain();
+            BlockchainDB.Atomic = atomic;
+
+            //Create(atomic, myProfileAddress, privateKey); // Create the blockchain.
+
+            atomic.LoadFromFilesystem();
 
             Console.WriteLine("");
             Console.WriteLine("Current value of key: Name is: " + atomic.GetValue(myProfileAddress, "Name"));

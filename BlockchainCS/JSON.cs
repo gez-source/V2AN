@@ -26,5 +26,10 @@ namespace BlockchainCS
 
             return UTF8Encoding.UTF8.GetString(body);
         }
+
+        public static T FromJSON<T>(string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
     }
 }
