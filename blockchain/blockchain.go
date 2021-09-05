@@ -45,7 +45,7 @@ func populate(filepath string) [][]string {
 
 }
 
-func main() {
+func notmain() {
 	fmt.Println("Start server...")
 
 	myrecords := populate("dataset.csv")
@@ -235,23 +235,23 @@ func main() {
 
 			_ = p
 
-/* 			k := []Transaction{}
-			for i := 1; i < len(myrecords); i++ {
-				postCode := myrecords[i][4]
-				begin := myrecords[i][0:7]
+			/* 			k := []Transaction{}
+			   			for i := 1; i < len(myrecords); i++ {
+			   				postCode := myrecords[i][4]
+			   				begin := myrecords[i][0:7]
 
-				txn := Transaction{
-					TransactionHash: "1a61742484b0aa134d330dc19ab64e4909621e7c9f576e112142e25b7853d0dc",
-					BlockID:         "5120021",
-					Age:             4,
-					FromAddress:     "4f980a3ef05eaf6eb2395d8a48594b08502b9033",
-					ToAddress:       "22ff293e14f1ec3a09b137e9e06084afd63addf9",
-					Key:             postCode,
-					Value:           begin[0] + begin[1] + begin[3] + begin[5] + begin[6],
-				}
+			   				txn := Transaction{
+			   					TransactionHash: "1a61742484b0aa134d330dc19ab64e4909621e7c9f576e112142e25b7853d0dc",
+			   					BlockID:         "5120021",
+			   					Age:             4,
+			   					FromAddress:     "4f980a3ef05eaf6eb2395d8a48594b08502b9033",
+			   					ToAddress:       "22ff293e14f1ec3a09b137e9e06084afd63addf9",
+			   					Key:             postCode,
+			   					Value:           begin[0] + begin[1] + begin[3] + begin[5] + begin[6],
+			   				}
 
-				k = append(k, txn)
-			} */
+			   				k = append(k, txn)
+			   			} */
 
 			json_msg, err := json.Marshal(p)
 			if err != nil {
