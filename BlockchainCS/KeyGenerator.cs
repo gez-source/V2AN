@@ -17,6 +17,9 @@ namespace BlockchainCS
             string priv = Crypto.EllipticCurve.Converters.KeyToBase62(privateKey);
             string pub = Crypto.EllipticCurve.Converters.KeyToBase62(publicKey);
 
+            //pub = publicKey.toPem();
+            //priv = privateKey.toPem();
+
             Console.WriteLine("Public Key (also your profile address): " + pub);
             Console.WriteLine("");
             Console.WriteLine("Private Key (keep this secret used to sign transactions): " + priv);

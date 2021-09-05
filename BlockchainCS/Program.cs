@@ -1,5 +1,6 @@
 ﻿using EllipticCurve;
 using System;
+using System.Threading;
 
 namespace BlockchainCS
 {
@@ -105,7 +106,7 @@ namespace BlockchainCS
 
             //Create(atomic, myProfileAddress, privateKey); // Create the blockchain.
 
-            atomic.LoadFromFilesystem();
+            atomic.LoadFromFilesystem(); // Load existing blockchain from file system.
 
             Console.WriteLine("");
             Console.WriteLine("Current value of key: Name is: " + atomic.GetValue(myProfileAddress, "Name"));
@@ -114,9 +115,30 @@ namespace BlockchainCS
             Console.WriteLine("Blockchain valid? " + (atomic.IsChainValid() ? "Yes" : "No"));
 
 
-            // Start Socket Server.
-            AsynchronousSocketListener.StartListening();
+            // Start Socket Servers.
+            Thread blockchainServer = new Thread(new ParameterizedThreadStart(AsynchronousSocketListener.StartListening));
+            blockchainServer.Start(8000);
 
+            Thread trackerServer = new Thread(new ParameterizedThreadStart(TrackerServer.StartListening));
+            trackerServer.Start(8008);
+
+            Thread peerClient = new Thread(new ParameterizedThreadStart(PeerClient.StartListening));
+            peerClient.Start(8009);
+
+            while (true)
+            {
+                Console.WriteLine("Press 'q' to quit");
+                
+                if(Console.ReadKey().Key == ConsoleKey.Q)
+                {
+                    break;
+                }
+            }
+
+            // TODO: Exit threads cleanly.
+            blockchainServer.Abort();
+            trackerServer.Abort();
+            peerClient.Abort();
             return 0;
         }
     }

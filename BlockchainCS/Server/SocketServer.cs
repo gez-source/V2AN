@@ -6,23 +6,23 @@ using System.Threading;
 
 namespace BlockchainCS
 { 
-    public class StateObject
-    {
-        // Size of receive buffer.  
-        public const int BufferSize = 1024;
-
-        // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
-
-        // Received data string.
-        public StringBuilder sb = new StringBuilder();
-
-        // Client socket.
-        public Socket workSocket = null;
-    }
-
     public class AsynchronousSocketListener
     {
+        public class StateObject
+        {
+            // Size of receive buffer.  
+            public const int BufferSize = 1024;
+
+            // Receive buffer.  
+            public byte[] buffer = new byte[BufferSize];
+
+            // Received data string.
+            public StringBuilder sb = new StringBuilder();
+
+            // Client socket.
+            public Socket workSocket = null;
+        }
+
         // Thread signal.  
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
@@ -30,12 +30,14 @@ namespace BlockchainCS
         {
         }
 
-        public static void StartListening()
+        public static void StartListening(object parameter)
         {
+            int port = (int)parameter;
+
             //IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             //IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPAddress ipAddress = Dns.Resolve("localhost").AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 8000);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
             // Create a TCP/IP socket.  
             Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -50,7 +52,7 @@ namespace BlockchainCS
                 {
                     allDone.Reset();
  
-                    Console.WriteLine("Waiting for a connection...");
+                    Console.WriteLine("[Blockchain] Waiting for a connection...");
                     listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
  
                     allDone.WaitOne();
@@ -101,7 +103,7 @@ namespace BlockchainCS
 
                 if (command == "GetBlocks")
                 {
-                    Console.WriteLine("{0}", content);
+                    Console.WriteLine("[Blockchain] {0}", content);
 
                     //Block[] blocks =
                     //{
@@ -136,7 +138,7 @@ namespace BlockchainCS
                 }
                 else if (command == "GetTransactions")
                 {
-                    Console.WriteLine("{0}", content);
+                    Console.WriteLine("[Blockchain] {0}", content);
 
                     //Transaction[] transactions = 
                     //{ new Transaction()
@@ -179,7 +181,7 @@ namespace BlockchainCS
                 }
                 else if (command == "GetBlock")
                 {
-                    Console.WriteLine("{0}", content);
+                    Console.WriteLine("[Blockchain] {0}", content);
 
                     //Block block = new Block()
                     //{
@@ -196,7 +198,7 @@ namespace BlockchainCS
                 }
                 else if (command == "GetTransaction")
                 {
-                    Console.WriteLine("{0}", content);
+                    Console.WriteLine("[Blockchain] {0}", content);
 
                     //Transaction transaction = new Transaction()
                     //{

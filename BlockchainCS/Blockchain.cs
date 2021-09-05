@@ -292,7 +292,7 @@ namespace BlockchainCS
             string chainDir = "chain";
 
             BlockchainInfo info = BlockchainInfo.GetInfo();
-
+            
             for(int blockId=0; blockId <= info.BlockHeight; blockId++)
             {
                 string fileName = chainDir + "\\block_" + blockId.ToString() + ".dat";
